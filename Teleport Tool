@@ -1,0 +1,27 @@
+local Tele = Instance.new("Tool")
+Tele.RequiresHandle = false
+Tele.Name = "TPTool"
+Tele.ToolTip = "Teleport Tool"
+Tele.Parent = game.Players.LocalPlayer.Backpack
+
+local connection
+
+Tele.Equipped:Connect(function()
+    local player = game.Players.LocalPlayer
+    local mouse = player:GetMouse()
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+    
+    connection = Tele.Activated:Connect(function()
+        if humanoidRootPart and mouse.Target then
+            humanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 5, 0))
+        end
+    end)
+end)
+
+Tele.Unequipped:Connect(function()
+    if connection then
+        connection:Disconnect()
+        connection = nil
+    end
+end)
