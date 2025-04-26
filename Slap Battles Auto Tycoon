@@ -76,6 +76,7 @@ local function setToggle(state)
 	TweenService:Create(knob, TweenInfo.new(0.25), {Position = goalPos}):Play()
 end
 
+-- FUNCTION TO CLICK THE TYCOON 😱🤑🤑
 local function autoClick()
 	while toggled do
 		local model = workspace:FindFirstChild(modelName)
@@ -92,7 +93,7 @@ local function autoClick()
 	end
 end
 
--- FUNCTION TO CLICK THE TYCOON 😱🤑🤑
+-- activate the auto tycoon 😎😎😎
 clickArea.MouseButton1Click:Connect(function()
 	if debounce then return end
 	debounce = true
