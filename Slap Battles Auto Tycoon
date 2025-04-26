@@ -1,0 +1,111 @@
+-- Made by BurgerMan
+local player = game.Players.LocalPlayer
+local username = player.Name
+local modelName = "ÅTycoon" .. username
+
+local toggled = false
+local debounce = false
+
+local ui = Instance.new("ScreenGui")
+ui.Name = "Auto Tycoon"
+ui.ResetOnSpawn = false
+ui.Parent = player:WaitForChild("PlayerGui")
+
+local frame = Instance.new("Frame")
+frame.Name = "MainFrame"
+frame.Size = UDim2.new(0, 200, 0, 100)
+frame.Position = UDim2.new(0.5, -100, 0.5, -50)
+frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+frame.BorderSizePixel = 0
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.Active = true
+frame.Draggable = true
+frame.Parent = ui
+
+local frameCorner = Instance.new("UICorner")
+frameCorner.CornerRadius = UDim.new(0, 12)
+frameCorner.Parent = frame
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 0, 24)
+title.Position = UDim2.new(0, 0, 0, 0)
+title.BackgroundTransparency = 1
+title.Text = "Auto Tycoon"
+title.TextColor3 = Color3.fromRGB(255, 255, 255)
+title.Font = Enum.Font.SourceSansBold
+title.TextSize = 18
+title.Parent = frame
+
+local toggle = Instance.new("Frame")
+toggle.Name = "Toggle"
+toggle.Size = UDim2.new(0, 60, 0, 30)
+toggle.Position = UDim2.new(0.5, -30, 0.5, -15)
+toggle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+toggle.BorderSizePixel = 0
+toggle.Parent = frame
+
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(1, 0)
+toggleCorner.Parent = toggle
+
+local knob = Instance.new("Frame")
+knob.Name = "Knob"
+knob.Size = UDim2.new(0, 26, 0, 26)
+knob.Position = UDim2.new(0, 2, 0, 2)
+knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+knob.BorderSizePixel = 0
+knob.Parent = toggle
+
+local knobCorner = Instance.new("UICorner")
+knobCorner.CornerRadius = UDim.new(1, 0)
+knobCorner.Parent = knob
+
+local clickArea = Instance.new("TextButton")
+clickArea.Size = UDim2.new(1, 0, 1, 0)
+clickArea.BackgroundTransparency = 1
+clickArea.Text = ""
+clickArea.Parent = toggle
+
+local TweenService = game:GetService("TweenService")
+
+local function setToggle(state)
+	local goalColor = state and Color3.fromRGB(64, 200, 114) or Color3.fromRGB(200, 200, 200)
+	local goalPos = state and UDim2.new(1, -28, 0, 2) or UDim2.new(0, 2, 0, 2)
+
+	TweenService:Create(toggle, TweenInfo.new(0.25), {BackgroundColor3 = goalColor}):Play()
+	TweenService:Create(knob, TweenInfo.new(0.25), {Position = goalPos}):Play()
+end
+
+local function autoClick()
+	while toggled do
+		local model = workspace:FindFirstChild(modelName)
+		if model then
+			local clickPart = model:FindFirstChild("Click")
+			if clickPart then
+				local clickDetector = clickPart:FindFirstChildOfClass("ClickDetector")
+				if clickDetector then
+					fireclickdetector(clickDetector)
+				end
+			end
+		end
+		task.wait()
+	end
+end
+
+-- FUNCTION TO CLICK THE TYCOON 😱🤑🤑
+clickArea.MouseButton1Click:Connect(function()
+	if debounce then return end
+	debounce = true
+
+	toggled = not toggled
+	setToggle(toggled)
+
+	if toggled then
+		coroutine.wrap(autoClick)()
+	end
+
+	task.wait()
+	debounce = false
+end)
+
+setToggle(false)
